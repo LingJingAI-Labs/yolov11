@@ -180,3 +180,6 @@ yolo11s.pt
 yolo11m.pt
 yolo11l.pt
 yolo11x.pt
+
+# data
+data/
