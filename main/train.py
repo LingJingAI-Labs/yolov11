@@ -44,6 +44,8 @@ def train_yolo_model():
     # --- 设备检查 (优先使用 MPS) ---
     if torch.backends.mps.is_available():
         device = 'mps'
+    elif torch.cuda.is_available():
+        device = 'cuda'
     else:
         device = 'cpu'
     print(f"将使用的设备: {device}")
