@@ -2,20 +2,21 @@ import os
 import cv2
 import torch
 from ultralytics import YOLO
+from config import PROJECT_ROOT, RUNS_DIR, TRAIN_PROJECT_NAME, TRAIN_RUN_NAME
 
 def video_inference_with_custom_model():
 
     # 训练好的模型权重路径
-    project_root = '/Users/snychng/Work/code/yolov11'
-    project_name = 'train-0424'                       
-    run_name = 'exp34'                              
-    model_weights_path = os.path.join(project_root, 'runs', 'detect', project_name, run_name, 'weights', 'best.pt')
+    model_weights_path = os.path.join(RUNS_DIR, TRAIN_PROJECT_NAME, TRAIN_RUN_NAME, 'weights', 'best.pt')
 
-    # 需要进行预测的视频源路径
-    video_path = '/Users/snychng/Work/code/yolov11/data/video/test-05.mp4'
+    # 需要进行预测的视频源路径（可考虑也放到 config.py 统一管理）
+    video_path = os.path.join(PROJECT_ROOT, 'data', 'video', 'test-05.mp4')
 
     # 置信度阈值
     confidence_threshold = 0.25
+    
+    # 设置显示窗口的最大宽度
+    display_width = 1024  # 可根据你的屏幕大小调整这个值
 
     # --- 设备检查 ---
     if torch.backends.mps.is_available():
@@ -66,38 +67,33 @@ def video_inference_with_custom_model():
             break
 
         frame_count += 1
-        # print(f"正在处理帧: {frame_count}") # 可选：打印帧数显示进度
 
-        # 使用 YOLO 模型进行推理 (基于代码2的模型调用方式，并应用置信度阈值)
-        # model(frame, ...) 是 model.predict(frame, ...) 的简写形式，适用于单输入
-        # conf=confidence_threshold 应用了阈值
-        # verbose=False 可以减少控制台输出，避免每帧都打印日志
+        # 使用 YOLO 模型进行推理
         results = model(frame, conf=confidence_threshold, verbose=True)
 
         # 处理推理结果
-        # results 是一个列表，通常包含一个 Results 对象对于单帧输入
-        annotated_frame = frame # 初始化带标注的帧为原始帧
+        annotated_frame = frame
         for result in results:
-            # result.plot() 会在当前帧上绘制检测框和标签
-            annotated_frame = result.plot() # 获取绘制了检测结果的帧
+            annotated_frame = result.plot()
 
-            # 您可以在这里进一步处理 result 对象，例如打印框坐标、类别、置信度等
-            # for box in result.boxes:
-            #     print(f"  Detected: Class={box.cls.item()}, Conf={box.conf.item():.2f}, XYXY={box.xyxy.squeeze().tolist()}")
+        # 调整显示帧的大小
+        frame_height, frame_width = annotated_frame.shape[:2]
+        # 计算调整后的高度以保持宽高比
+        display_height = int(frame_height * (display_width / frame_width))
+        # 调整帧大小
+        resized_frame = cv2.resize(annotated_frame, (display_width, display_height))
 
-
-        # 显示处理后的帧
-        cv2.imshow('YOLOv11 Video Inference (Custom Model)', annotated_frame)
+        # 显示调整大小后的帧
+        cv2.imshow('YOLOv11 Video Inference (Custom Model)', resized_frame)
 
         # 检测按键，如果按下 'q' 键则退出循环
-        # cv2.waitKey(1) 表示等待键盘输入 1 毫秒
         if cv2.waitKey(1) & 0xFF == ord('q'):
             print("用户请求退出。")
             break
 
-    # --- 释放资源 (基于代码2的风格) ---
-    cap.release()          # 释放视频捕捉对象
-    cv2.destroyAllWindows() # 关闭所有 OpenCV 窗口
+    # --- 释放资源 ---
+    cap.release()
+    cv2.destroyAllWindows()
 
     print("资源已释放。推理结束。")
 
