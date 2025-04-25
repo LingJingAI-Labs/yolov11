@@ -25,7 +25,7 @@ except Exception as e:
     exit()
 
 # 视频文件路径
-video_path = '/Users/snychng/Work/code/yolov11/data/video/Episode-1-1.mp4'
+video_path = '/Users/snychng/Work/code/yolov11/data/video/test-05.mp4'
 
 # 打开视频文件
 cap = cv2.VideoCapture(video_path)
