@@ -7,7 +7,7 @@ from config import PROJECT_ROOT, RUNS_DIR, TRAIN_PROJECT_NAME, TRAIN_RUN_NAME
 def video_inference_with_custom_model():
 
     # 训练好的模型权重路径
-    model_weights_path = os.path.join(RUNS_DIR, TRAIN_PROJECT_NAME, TRAIN_RUN_NAME, 'weights', 'best.pt')
+    model_weights_path = r"E:\LingJing\yolov11\runs\detect\train-0424\yolo11m_exp\weights\best.pt"
 
     # 需要进行预测的视频源路径（可考虑也放到 config.py 统一管理）
     video_path = os.path.join(PROJECT_ROOT, 'data', 'video', 'test-05.mp4')
@@ -16,7 +16,7 @@ def video_inference_with_custom_model():
     confidence_threshold = 0.25
     
     # 设置显示窗口的最大宽度
-    display_width = 1024  # 可根据你的屏幕大小调整这个值
+    display_width = 720  # 可根据你的屏幕大小调整这个值
 
     # --- 设备检查 ---
     if torch.backends.mps.is_available():

@@ -16,7 +16,7 @@ LABEL_DIR = os.environ.get('YOLO_LABEL_DIR', PROJECT_ROOT / 'data' / 'img' / 'la
 RUNS_DIR = os.environ.get('YOLO_RUNS_DIR', PROJECT_ROOT / 'runs' / 'detect')
 
 # 模型路径
-BASE_MODEL = os.environ.get('YOLO_BASE_MODEL', PROJECT_ROOT / 'models' / 'yolo11n.pt')
+BASE_MODEL = os.environ.get('YOLO_BASE_MODEL', PROJECT_ROOT / 'models' / 'yolo11x.pt')
 
 # 其它参数
 TRAIN_PROJECT_NAME = os.environ.get('YOLO_TRAIN_PROJECT', 'train-0424')
